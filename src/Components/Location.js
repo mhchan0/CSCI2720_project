@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import Map from "./Map.js"
 
 class Location extends Component {
     constructor(props) {
@@ -101,6 +102,8 @@ class Location extends Component {
                     <h2 className="text-primary">Location</h2>
                     <h3 ><b className="text-primary">{username}</b>&nbsp;<i className="bi bi-person-circle"></i></h3>
                 </div>
+
+                <Map lng={114.177216} lat={22.302711} zoom={10}/>
                 
                 <input type="text" id="myInput" value={this.state.search} onChange={(value) => this.setState({search: value.target.value})} onKeyUp={() => this.searchLocation()} placeholder="Search for Locations.." />
                 
