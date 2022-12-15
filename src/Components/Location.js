@@ -135,7 +135,7 @@ class Location extends Component {
                 
                 <input type="text" id="myInput" value={this.state.search} onChange={(value) => this.setState({search: value.target.value})} onKeyUp={() => this.searchLocation()} placeholder="Search for Locations..." />
                 
-                <p><button id="sort-btn" className="btn btn-info" onClick={() => this.sortTable()}>Sort <i class="bi bi-arrow-up"></i></button></p>
+                <p><button id="sort-btn" className="btn btn-info" onClick={() => this.sortTable()}>Sort <i className="bi bi-arrow-up"></i></button></p>
                 
                 <table id="myTable" className="my-3">
                     <thead>
