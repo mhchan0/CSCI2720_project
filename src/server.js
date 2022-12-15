@@ -30,6 +30,7 @@ lastUpdate: { type: Date, default: Date.now }
 });
 
 const LocationSchema = new Schema({
+locid: { type: Number, required: true },
 name: { type: String, required: true },
 latitude: { type: Number, required: true },
 longitude: {type: Number, required: true },
@@ -39,7 +40,7 @@ programme: [{ type: Schema.Types.ObjectId, ref: "Programme" }]
 const ProgrammeSchema = new Schema({
 title:{type: String, required: true },
 venue:{type: String, required: true },
-date:{type: Date, required: true },
+date:{type: String, required: true },
 description:{type: String, required: true },
 price:{type: String, required: true},
 presenter:{type: String, required: true }
@@ -183,7 +184,7 @@ app.post('/location', (req,res) => {
 
 var file_dir_xml = __dirname + '/XMLfiles/';
 //down and put xml to db
-updateEvents = () => {
+updateEvents = (res) => {
     var url = 'https://www.lcsd.gov.hk/datagovhk/event/events.xml';
     var file_name = 'events.xml';
     var parser = new xml2js.Parser();
@@ -195,12 +196,33 @@ updateEvents = () => {
             fs.readFile(file_dir_xml + file_name, (err, data) => {
                 parser.parseString(data, (err, result) => {
                     //console.dir(result.events.event);
-                    result.events.event.map((value, index) => {//have url of event
-                        if (value.pricee != '' && value.desce != ''){
-                            //console.log(value);
-                        }
-                        
-                    });
+                    Programme.deleteMany({}, (err, e)=> {//del whole program db
+                        result.events.event.map((value, index) => {
+                            //if (value.desce[0] == ''){console.log(value.titlee[0]);}
+                            if (value.presenterorge[0] != '' && value.titlee[0] != '' && value.pricee[0] != '' && value.predateE[0] != ''){
+                                //console.log(value);
+                                Location.findOne({// find one loc
+                                    locid: value.venueid
+                                },(err, e)=> {
+                                    if (e == null){//if no such place in db, skip
+                                        //console.log(value.titlee);
+                                    }else {
+                                        Programme.create({//create prog
+                                            title: value.titlee[0],
+                                            venue: e.locid,
+                                            date: value.predateE[0],// if u want to change the type to Date, change it
+                                            description:  value.desce[0] == ''?'N/A':value.desce[0],
+                                            price: value.pricee[0],
+                                            presenter: value.presenterorge[0]
+                                        })
+                                        res.send();
+                                        //console.log("done" + index);
+                                    }
+                                    //console.log(e);
+                                })
+                            }
+                        });
+                    })
                 });
             });
         });
@@ -216,6 +238,7 @@ app.post('/getXML', (req, res) => {
     var parser = new xml2js.Parser();
     //will create if not exist*
     //do location first
+    var lastmap = 0;
     var file2 = fs.createWriteStream(file_dir_xml + file_name2, {'flags': 'w'});
     const get2 = https.get(url2, (response) => {
         var stream = response.pipe(file2);
@@ -223,29 +246,32 @@ app.post('/getXML', (req, res) => {
         stream.on('finish', ()=> {//wait file get all data
             fs.readFile(file_dir_xml + file_name2, (err, data) => {
                 parser.parseString(data, (err, result) => {
-                    //console.dir(result);
+                    //console.dir(result.venues.venue[0].$.id);
                     if (err){console.log(err);}
-                    Location.deleteMany({}, (err, e)=>{
-                        if (err) {console.log(err)}
-                        else {
-                            result.venues.venue.map((value, index) => {//have url of event
-                                if (value.latitude != '' && value.longitude != ''){
-                                    //console.log(value);
-                                        Location.create({
-                                            name: value.venuee[0],
-                                            latitude: value.latitude[0],
-                                            longitude: value.longitude[0]
-                                        }, (err, e) => {
-                                            if (err){
-                                                console.log(err);
-                                            }else {
-                                                res.send();
-                                            }
-                                        })
-                                };
-                                
-                            });
-                        }
+                    Location.deleteMany({})
+                    .then((e)=>{
+                        result.venues.venue.map(async(value, index) => {//have url of event
+                            if (value.latitude != '' && value.longitude != ''){
+                                Location.create({
+                                    locid: value.$.id,
+                                    name: value.venuee[0],
+                                    latitude: value.latitude[0],
+                                    longitude: value.longitude[0]
+                                }, (err, e) => {
+                                    if (err){
+                                        console.log(err);
+                                    }else {
+                                        
+                                    }
+                                })
+                            };
+                            
+                        });
+
+                    })
+                    .then(()=> {
+                        updateEvents(res);
+
                     })
                 });
             });
