@@ -12,9 +12,6 @@ class Map extends Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props.lng);
-        console.log(this.props.lat);
-        console.log(this.props.zoom);
         this.state = {
             lng: this.props.lng,
             lat: this.props.lat,
