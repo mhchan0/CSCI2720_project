@@ -214,6 +214,17 @@ updateEvents = (res) => {
                                             description:  value.desce[0] == ''?'N/A':value.desce[0],
                                             price: value.pricee[0],
                                             presenter: value.presenterorge[0]
+                                        }, (err, ee)=>{
+                                            if (err){console.log(err);}
+                                            else {
+                                                //console.log(ee._id);
+                                                Location.updateOne({locid: e.locid}, { $push: { programme: ee._id } }, (err, eee)=> {
+                                                    if (err){
+                                                        console.log(err);
+                                                    }
+                                                    
+                                                });
+                                            }
                                         })
                                         res.send();
                                         //console.log("done" + index);
