@@ -222,11 +222,11 @@ updateEvents = (res) => {
                                                     if (err){
                                                         console.log(err);
                                                     }
-                                                    
+                                                    res.send();
                                                 });
                                             }
                                         })
-                                        res.send();
+                                        
                                         //console.log("done" + index);
                                     }
                                     //console.log(e);
