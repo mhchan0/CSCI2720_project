@@ -2,8 +2,26 @@ import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import axios from 'axios';
 
-class Place extends Component {
+class Event extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            locationList: []
+        }
+    }
+
+    componentDidMount() {
+        this.loadData();
+    }
+
+    loadData = () => {
+
+    }
+
+
 
     render() {
 
@@ -15,12 +33,15 @@ class Place extends Component {
         return (
             <main className="col">
                 <div className="my-3 d-flex justify-content-between">
-                    <h2 className="text-primary">Place Data</h2>
+                    <h2 className="text-primary">Event Data</h2>
                     <h3 ><b className="text-primary">{username}</b>&nbsp;<i className="bi bi-person-circle"></i></h3>
+                </div>
+                <div>
+                    
                 </div>
             </main>
         );
     }
 }
 
-export default Place;
+export default Event;

@@ -37,7 +37,7 @@ class Navbar extends Component {
 		    					<Link className="nav-link" to={"/dashboard/user"}><h5><i className="bi bi-people-fill"></i>&nbsp;User Data</h5></Link>
 		    				</li>
 							<li className="navbar-item my-3">
-		    					<Link className="nav-link" to={"/dashboard/place"}><h5><i className="bi bi-geo-alt-fill"></i>&nbsp;Place Data</h5></Link>
+		    					<Link className="nav-link" to={"/dashboard/event"}><h5><i class="bi bi-camera-reels-fill"></i>&nbsp;Event Data</h5></Link>
 		    				</li>
 							</div>
 							}
