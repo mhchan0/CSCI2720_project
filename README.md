@@ -24,7 +24,7 @@ npm run dev
 - [ ] List all locations in a table as links to single locations, and allow sorting of the table 
 with number of events at venue
 - [ ] Show all locations in a map, with links to each single location
-- [ ] Search for locations which contain keywords in the name which will result in a table of 
+- [x] Search for locations which contain keywords in the name which will result in a table of 
 location results
 - [ ] A separate view for one single location, containing:
     * a map showing the location
