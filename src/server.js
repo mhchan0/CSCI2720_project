@@ -150,9 +150,8 @@ app.post('/updateuser', (req, res) => {
 });
 
 //show specific location data
-//not done
-app.get('/location/loc1', (req,res) => { 
-        Location.findOne({name: "Sha Tin Town Hall (Auditorium)"})
+app.post('/alocation', (req,res) => { 
+        Location.findOne({locid: req.body["locid"]})
         .exec(function (err, e) {
             if (err)
                 res.send(err);
@@ -161,7 +160,8 @@ app.get('/location/loc1', (req,res) => {
                     res.status(404).send();
                 }
                 else {
-                    res.send(JSON.stringify(obj, null, 0.5));
+                    res.status(200);
+                    res.send(e);
                 }
             }
        });
