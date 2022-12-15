@@ -167,17 +167,18 @@ app.get('/location/loc1', (req,res) => {
 });
 
 //show all location data
-//not done
-app.get('/location', (req,res) => { 
+app.post('/location', (req,res) => { 
         Location.find({}, (err, e) => {
-        if (e.length > 0) {
-                if (err)
-                    res.send(err);
-                else { 
-                    res.send(JSON.stringify(e, null, 0.5));
-                }
-            }   
-        });
+            if (err) {
+                res.status(404);
+                res.send(err);
+            }
+            else {
+                res.status(200);
+                res.send(e);
+            }
+        }
+    );
 });
 
 var file_dir_xml = __dirname + '/XMLfiles/';

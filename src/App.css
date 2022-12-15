@@ -84,35 +84,7 @@
   background-color: #f1f1f1;
 }
 
-/*for the star*/
-.rate {
-  float: left;
-  height: 46px;
-  padding: 0 10px;
-}
-
-.rate:not(:checked) > input {
-  position:absolute;
-  top:-9999px;
-}
-
-.rate:not(:checked) > label {
-  float:right;
-  width:1em;
-  overflow:hidden;
-  white-space:nowrap;
-  font-size:30px;
-  color:#ccc;
-}
-
-.rate:not(:checked) > label:before {
-  content: '★ ';
-}
-
-.rate > input:checked ~ label {
-  color: #a6ff00;    
-}
-
+/* css for map */
 .map-container {
   height: 400px;
 }

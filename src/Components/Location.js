@@ -10,13 +10,15 @@ class Location extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            search: ""
+            locationList: [],
+            search: "",
+            sortAscending: false
         }
     }
 
-    // componentDidMount() {//load for each set state(just want once=> new class + new componentdidmount)
-
-    // }
+    componentDidMount() { //load for each set state(just want once=> new class + new componentdidmount)
+        this.LoadLocationList();
+    }
 
 
     searchLocation() { //search keyword
@@ -61,10 +63,19 @@ class Location extends Component {
             y = rows[i + 1].getElementsByTagName("TD")[1];
             
             //check if the two rows should switch place:
-            if (Number(x.innerHTML) > Number(y.innerHTML)) {
-              //if so, mark as a switch and break the loop:
-              shouldSwitch = true;
-              break;
+            if (this.state.sortAscending) {
+                if (Number(x.innerHTML) > Number(y.innerHTML)) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                break;
+                }
+            }
+            else {
+                if (Number(x.innerHTML) < Number(y.innerHTML)) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                break;
+                }
             }
           }
           if (shouldSwitch) {
@@ -73,20 +84,37 @@ class Location extends Component {
             rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
             switching = true;
           }
-        }     
+        }
+        
+        if (this.state.sortAscending) {
+            document.querySelector("#sort-btn").innerHTML = 'Sort <i class="bi bi-arrow-up"></i>';
+            this.setState({
+                sortAscending: false
+            });
+        }
+        else {
+            document.querySelector("#sort-btn").innerHTML = 'Sort <i class="bi bi-arrow-down"></i>';
+            this.setState({
+                sortAscending: true
+            });
+        }
     }
 
-    Load() {
+    LoadLocationList() {
 
         axios({
             // need change localhost to the publicIP
-            url: "http://localhost:8080/location/loc1",
-            method: "GET",
+            url: "http://localhost:8080/location",
+            method: "POST",
         })
         .then((r) => {
-            window.location.replace("http://localhost:3000/dashboard/location/loc1");
-            console.log(r);
+            this.setState({
+                locationList: r.data
+            });
         })
+        .catch((err) => {
+            console.log("Internal server error");
+        });
     }
 
     render() {
@@ -105,59 +133,66 @@ class Location extends Component {
 
                 <Map lng={114.177216} lat={22.302711} zoom={10}/>
                 
-                <input type="text" id="myInput" value={this.state.search} onChange={(value) => this.setState({search: value.target.value})} onKeyUp={() => this.searchLocation()} placeholder="Search for Locations.." />
+                <input type="text" id="myInput" value={this.state.search} onChange={(value) => this.setState({search: value.target.value})} onKeyUp={() => this.searchLocation()} placeholder="Search for Locations..." />
                 
-                <p><button onClick={() => this.sortTable()}>Sort</button></p>
+                <p><button id="sort-btn" className="btn btn-info" onClick={() => this.sortTable()}>Sort <i class="bi bi-arrow-up"></i></button></p>
                 
-                <table id="myTable">
-                <tr className="header">
-                    <th>Location</th>
-                    <th>Event</th>
-                    <th>Favourite Location</th>
-                </tr>
-                <tr onClick={() => this.Load()} >
-                    <Link className="nav-link" to={"/dashboard/location/loc1"}><td id="loc1">Sha Tin Town Hall (Auditorium)</td></Link>
-                    <td>3</td>
-                    <td>
-                    <div className="rate">
-                        <input type="checkbox" id="star1" name="rate" value="1" />
-                        <label htmlFor="star1" title="text">1 star</label>
-                    </div>
-                    </td>
-                </tr>
-                <tr id="loc2" onClick= "Load()">
-                    <td>loc2</td>
-                    <td>10</td>
-                    <td>
-                    <div className="rate">
-                        <input type="checkbox" id="star2" name="rate" value="2" />
-                        <label htmlFor="star2" title="text">1 star</label>
-                    </div>
-                    </td>
-                </tr>
-                <tr id="loc3" onClick= "Load()">
-                    <td>loc3</td>
-                    <td>20</td>
-                    <td>
-                    <div className="rate">
-                        <input type="checkbox" id="star3" name="rate" value="3" />
-                        <label htmlFor="star3" title="text">1 star</label>
-                    </div>
-                    </td>
-                </tr>
-                <tr id="loc4" onClick= "Load()">
-                    <td>loc4</td>
-                    <td>15</td>
-                    <td>
-                    <div className="rate">
-                        <input type="checkbox" id="star4" name="rate" value="4" />
-                        <label htmlFor="star4" title="text">1 star</label>
-                    </div>
-                    </td>
-                </tr>
+                <table id="myTable" className="my-3">
+                    <thead>
+                        <tr className="header">
+                            <th>Location</th>
+                            <th>Event Number</th>
+                            <th>Favourite Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.locationList.map((location, index) => <LocationRow key={index} i={index} name={location.name} programme= {location.programme} />)}
+                    </tbody>
                 </table>
             </main>
             
+        );
+    }
+}
+
+class LocationRow extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            isFavourite: false
+        };
+    }
+
+    clickStar = (e) => {
+        let element = document.querySelector("#star" + this.props.i);
+        if (!this.state.isFavourite) {
+            this.setState({
+                isFavourite: true
+            });
+            element.classList.remove("text-secondary");
+            element.classList.add("text-warning");
+        }
+        else {
+            this.setState({
+                isFavourite: false
+            });
+            element.classList.remove("text-warning");
+            element.classList.add("text-secondary");
+        }
+    }
+
+    render() {
+        return (
+            <tr>
+                <td id={"loc" + this.props.i}>
+                    <Link className="nav-link" to={"/dashboard/location/"}>{this.props.name}</Link>
+                </td>
+                <td>{this.props.programme.length}</td>
+                <td>
+                    <i id={"star" + this.props.i} className="bi bi-star-fill text-secondary" onClick={this.clickStar}></i>
+                </td>
+            </tr>
         );
     }
 }
