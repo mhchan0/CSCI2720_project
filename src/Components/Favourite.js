@@ -5,6 +5,13 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 class Favourite extends Component {
+	
+	constructor(props){
+		super(props);
+		this.state = {
+			locationList: 
+		}
+	}
 
     Loadlocation() {
         axios({
@@ -18,6 +25,20 @@ class Favourite extends Component {
             });
         })
     }
+	
+	window.addEventListener("onload", (e) => {
+		let fieldArea = document.getElementById("favLocationList");
+		var favList = this.locationList;
+		let locList = document.createElement("ul");
+		locList.setAttribute("id", "locList");
+		favList.map((arr) => {
+			let locItem = document.createElement("li");
+			locItem.value = arr;
+			locList.appendChild(locItem);
+		});
+		fieldArea.appendChild(locList);
+		}
+	)
 
     render() {
 
@@ -28,10 +49,12 @@ class Favourite extends Component {
 
         return (
 			<main className="col">
-                <div className="my-3 d-flex justify-content-between">
+				<div className="my-3 d-flex justify-content-between">
                     <h2 className="text-primary">Favourite</h2>
                     <h3 ><b className="text-primary">{username}</b>&nbsp;<i className="bi bi-person-circle"></i></h3>
                 </div>
+				<div id="favLocation" className="my-3 d-flex justify-content-between">
+				</div>
             </main>
         );
     }
