@@ -182,6 +182,21 @@ app.post('/location', (req,res) => {
     );
 });
 
+// get event data by objectId
+app.post('/eventbyid', (req, res) => {
+    Programme.find({
+        _id: { $in: req.body["id"]}
+    }, (err, e) => {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.status(200);
+            res.send(e);
+        }
+    });
+});
+
 var file_dir_xml = __dirname + '/XMLfiles/';
 //down and put xml to db
 updateEvents = (res) => {
