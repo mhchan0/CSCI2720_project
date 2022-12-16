@@ -298,4 +298,10 @@ app.post('/getXML', (req, res) => {
     
 });
 
+app.get('/location/fav', (req, res) => {
+    Access.findOne({username: sessionStorage.getItem("username")}).exec((err, a) => {
+        Location.findOne({})
+    })
+})
+
 app.listen(8080);
