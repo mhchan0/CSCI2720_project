@@ -9,7 +9,8 @@ class Favourite extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			locationList: 
+			locationList: "",
+			favLocationID: 0, 
 		}
 	}
 
@@ -32,8 +33,10 @@ class Favourite extends Component {
 		let locList = document.createElement("ul");
 		locList.setAttribute("id", "locList");
 		favList.map((arr) => {
+			this.setState("favLocationID", this.state.favLocationID + 1);
 			let locItem = document.createElement("li");
 			locItem.value = arr;
+			locItem.setAttribute("id", this.state.favLocationID);
 			locList.appendChild(locItem);
 		});
 		fieldArea.appendChild(locList);
