@@ -74,20 +74,59 @@ function ALocation() {
             .catch(err3 => {
                 console.log("Internal server error");
             })
+
+            const usernamePayload = {
+                username: username
+            }
+
+            axios({
+                // need change localhost to the publicIP
+                url: "http://localhost:8080/auser",
+                method: "POST",
+                data: usernamePayload
+            })
+            .then((e3) => {
+                
+                if (e3.data[0].favouriteLocation.includes(e.data._id)) {
+                    setFavourite(true);
+                }
+                
+            })
+            .catch((err3) => {
+                console.log("Internal server error");
+            });
+
         })
         .catch((err) => {
             window.location.replace("http://localhost:3000/dashboard/location");
         });
+        
     }
 
-    let clickStar = (e) => {
-
+    let clickStar = () => {
+        
         if (!isFavourite) {
             setFavourite(true);
         }
         else {
             setFavourite(false);
         }
+
+        const payload = {
+            username: sessionStorage.getItem("username"),
+            locid: loc,
+            fav: !isFavourite
+        }
+
+        axios({
+            url: "http://localhost:8080/fav",
+            method: "POST",
+            data: payload
+        })
+        .then(() => {})
+        .catch((err) => {
+            console.log("Internal server error");
+        });
     }
 
     let validateComment = (e) => {

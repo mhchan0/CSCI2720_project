@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Map from "./Map.js"
-import Favourite from "./Favourite.js"
 
 class Location extends Component {
     constructor(props) {
@@ -13,7 +12,8 @@ class Location extends Component {
         this.state = {
             locationList: [],
             search: "",
-            sortAscending: false
+            sortAscending: false,
+            favList: []
         }
     }
 
@@ -116,6 +116,25 @@ class Location extends Component {
         .catch((err) => {
             console.log("Internal server error");
         });
+
+        const payload = {
+            username: sessionStorage.getItem("username")
+        };
+
+        axios({
+            // need change localhost to the publicIP
+            url: "http://localhost:8080/auser",
+            method: "POST",
+            data: payload
+        })
+        .then((r) => {
+            this.setState({
+                favList: r.data[0].favouriteLocation
+            });
+        })
+        .catch((err) => {
+            console.log("Internal server error");
+        });
     }
 
     render() {
@@ -148,7 +167,9 @@ class Location extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.locationList.map((location, index) => <LocationRow key={index} i={index} name={location.name} programme={location.programme} locid={location.locid}/>)}
+                        {this.state.locationList.map((location, index) =>
+                        <LocationRow key={index} i={index} name={location.name} programme={location.programme} locid={location.locid} loc_id={location._id} favList={this.state.favList} />)
+                        }
                     </tbody>
                 </table>
             </main>
@@ -162,27 +183,37 @@ class LocationRow extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isFavourite: false
+            isFavourite: this.props.favList.includes(this.props.loc_id)
         };
     }
 
-    clickStar = (e) => {
-        let element = document.querySelector("#star" + this.props.i);
+    clickStar = () => {
         if (!this.state.isFavourite) {
             this.setState({
                 isFavourite: true
             });
-            element.classList.remove("text-secondary");
-            element.classList.add("text-warning");
-            Favourite.Loadlocation();
         }
         else {
             this.setState({
                 isFavourite: false
             });
-            element.classList.remove("text-warning");
-            element.classList.add("text-secondary");
         }
+
+        const payload = {
+            username: sessionStorage.getItem("username"),
+            locid: this.props.locid,
+            fav: !this.state.isFavourite
+        }
+
+        axios({
+            url: "http://localhost:8080/fav",
+            method: "POST",
+            data: payload
+        })
+        .then(() => {})
+        .catch((err) => {
+            console.log("Internal server error");
+        });
     }
 
     render() {
@@ -193,7 +224,8 @@ class LocationRow extends Component {
                 </td>
                 <td>{this.props.programme.length}</td>
                 <td>
-                    <i id={"star" + this.props.i} className="bi bi-star-fill text-secondary click-star" onClick={this.clickStar}></i>
+                    {!this.state.isFavourite && <i id={"star" + this.props.i} className="bi bi-star-fill text-secondary click-star" onClick={() => this.clickStar()}></i>}
+                    {this.state.isFavourite && <i id={"star" + this.props.i} className="bi bi-star-fill text-warning click-star" onClick={() => this.clickStar()}></i>}
                 </td>
             </tr>
         );

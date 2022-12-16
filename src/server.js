@@ -98,6 +98,22 @@ app.post("/login", (req, res) => {
     });
 });
 
+// get a user data
+app.post("/auser", (req, res) => {
+    Access.find({
+        username: req.body["username"]
+    }, (err, e) => {
+        if (err || e === null) {
+            res.status(404);
+            res.send(err);
+        }
+        else {
+            res.status(200);
+            res.send(e);
+        }
+    });
+});
+
 // get users data
 app.post("/users", (req, res) => {
     Access.find({}, (err, e) => {
@@ -149,6 +165,21 @@ app.post('/updateuser', (req, res) => {
         }
     );
 });
+
+// find locations by objectId
+app.post('/locationbyid', (req, res) => {
+    Location.find({
+        _id: { $in : req.body["loc_id"]}
+    }, (err, e) => {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.status(200);
+            res.send(e);
+        }
+    })
+})
 
 //show specific location data
 app.post('/alocation', (req,res) => { 
@@ -327,8 +358,6 @@ app.post('/updateevent', (req, res) => {
     })
 });
 
-
-//download and put xml to db
 var file_dir_xml = __dirname + '/XMLfiles/';
 updateEvents = (res) => {
     var url = 'https://www.lcsd.gov.hk/datagovhk/event/events.xml';
@@ -337,39 +366,70 @@ updateEvents = (res) => {
     var file = fs.createWriteStream(file_dir_xml + file_name, {'flags': 'w'});
     const get = https.get(url, (response) => {
         var stream = response.pipe(file);
-        console.log('saved file in XMLfiles!');
         stream.on('finish', ()=> {//wait file get all data
             fs.readFile(file_dir_xml + file_name, (err, data) => {
                 parser.parseString(data, (err, result) => {
                     //console.dir(result.events.event);
-                    Programme.deleteMany({}, (err, e)=> {//del whole program db
+
+                        let totalLength = 0;
+                        let currentLength = 0;
+
+                        for (i of result.events.event) {
+                            if (i.presenterorge[0] !== '' && i.titlee[0] !== '' && i.pricee[0] !== '' && i.predateE[0] !== '') {
+                                totalLength++;
+                            }
+                        }
+
                         result.events.event.map((value, index) => {
                             //if (value.desce[0] == ''){console.log(value.titlee[0]);}
-                            if (value.presenterorge[0] != '' && value.titlee[0] != '' && value.pricee[0] != '' && value.predateE[0] != ''){
+                            if (value.presenterorge[0] !== '' && value.titlee[0] !== '' && value.pricee[0] !== '' && value.predateE[0] !== '') {
                                 //console.log(value);
                                 Location.findOne({// find one loc
                                     locid: value.venueid
                                 },(err, e)=> {
                                     if (e == null){//if no such place in db, skip
+                                        currentLength++;
+                                        if (currentLength >= totalLength) {
+                                            res.status(200);
+                                            res.send();
+                                        }
                                         //console.log(value.titlee);
                                     }else {
-                                        Programme.create({//create prog
+                                        Programme.findOne({
                                             title: value.titlee[0],
-                                            venue: e.locid,
-                                            date: value.predateE[0],// if u want to change the type to Date, change it
-                                            description:  value.desce[0] == ''?'N/A':value.desce[0],
-                                            price: value.pricee[0],
-                                            presenter: value.presenterorge[0]
                                         }, (err, ee)=>{
-                                            if (err){console.log(err);}
+
+                                            if (err){
+                                                res.send(err);
+                                            }
+                                            else if (ee === null) {
+                                                Programme.create({
+                                                    title: value.titlee[0],
+                                                    venue: e.locid,
+                                                    date: value.predateE[0],// if u want to change the type to Date, change it
+                                                    description:  value.desce[0] == ''?'N/A':value.desce[0],
+                                                    price: value.pricee[0],
+                                                    presenter: value.presenterorge[0]
+                                                }, (err2, eee) => {
+                                                    Location.updateOne({locid: e.locid}, { $push: { programme: eee._id } }, (err3, eeee)=> {
+                                                        if (err){
+                                                            res.send(err);
+                                                        }
+                                                        currentLength++;
+                                                        if (currentLength >= totalLength) {
+                                                            res.status(200);
+                                                            res.send();
+                                                        }
+                                                    });
+                                                })
+                                            }
                                             else {
-                                                //console.log(ee._id);
-                                                Location.updateOne({locid: e.locid}, { $push: { programme: ee._id } }, (err, eee)=> {
-                                                    if (err){
-                                                        console.log(err);
-                                                    }
+                                                currentLength++;
+                                                if (currentLength >= totalLength) {
+                                                    res.status(200);
                                                     res.send();
-                                                });
+                                                }
+                                            
                                             }
                                         })
                                         
@@ -379,12 +439,13 @@ updateEvents = (res) => {
                                 })
                             }
                         });
-                    })
+                    
                 });
             });
         });
     });
 }
+
 app.post('/getXML', (req, res) => {
     
     var url2 = 'https://www.lcsd.gov.hk/datagovhk/event/venues.xml';
@@ -399,37 +460,41 @@ app.post('/getXML', (req, res) => {
     var file2 = fs.createWriteStream(file_dir_xml + file_name2, {'flags': 'w'});
     const get2 = https.get(url2, (response) => {
         var stream = response.pipe(file2);
-        console.log('saved file2 in XMLfiles!');
         stream.on('finish', ()=> {//wait file get all data
             fs.readFile(file_dir_xml + file_name2, (err, data) => {
                 parser.parseString(data, (err, result) => {
                     //console.dir(result.venues.venue[0].$.id);
-                    if (err){console.log(err);}
-                    Location.deleteMany({})
-                    .then((e)=>{
-                        result.venues.venue.map(async(value, index) => {//have url of event
-                            if (value.latitude != '' && value.longitude != ''){
-                                Location.create({
+                        let totalLength = 0;
+                        for (i of result.venues.venue) {
+                            if (i.latitude[0] !== '' && i.longitude[0] !== '') {
+                                totalLength++;
+                            }
+                        }
+
+                        let currentLength = 0;
+                        result.venues.venue.map((value, index) => {//have url of event
+                            if (value.latitude[0] !== '' && value.longitude[0] !== '') {
+                                
+                                Location.findOneAndUpdate({
+                                    locid: value.$.id,
+                                }, {
                                     locid: value.$.id,
                                     name: value.venuee[0],
                                     latitude: value.latitude[0],
                                     longitude: value.longitude[0]
-                                }, (err, e) => {
-                                    if (err){
-                                        console.log(err);
-                                    }else {
-                                        
+                                }, {
+                                    upsert: true
+                                }, (err,e) => {
+                                    currentLength++;
+                                    if (currentLength >= totalLength) {
+                                        updateEvents(res);
                                     }
-                                })
+                                });        
+                                    
                             };
                             
                         });
-
-                    })
-                    .then(()=> {
-                        updateEvents(res);
-
-                    })
+                   
                 });
             });
         });
@@ -444,9 +509,60 @@ app.post('/getXML', (req, res) => {
     
 });
 
-app.get('/location/fav', (req, res) => {
-    Access.findOne({username: sessionStorage.getItem("username")}).exec((err, a) => {
-        Location.findOne({})
+// add or remove user favourite
+app.post('/fav', (req, res) => {
+    Location.findOne({
+        locid: req.body["locid"]
+    }, (err, e) => {
+        if (err || e === null) {
+            res.status(406);
+            res.send();
+        }
+        else {
+            if (req.body["fav"] === true) {
+                Access.findOne({
+                    username: req.body["username"]
+                }, (err2, e2) => {
+                    if (err2 || e2 === null) {
+                        res.status(406);
+                        res.send();
+                    }
+                    else {
+                        let favList = e2.favouriteLocation;
+                        if (!favList.includes(e._id)) {
+                            favList.push(e._id);
+                        }
+                        e2.favouriteLocation = favList;
+                        e2.save();
+                        res.status(200);
+                        res.send();
+                    }
+                })
+            }
+            else {
+                Access.findOne({
+                    username: req.body["username"]
+                }, (err2, e2) => {
+                    if (err2 || e2 === null) {
+                        res.status(406);
+                        res.send();
+                    }
+                    else {
+                        let favList = [];
+                        for (i of e2.favouriteLocation) {
+
+                            if (String(i) !== String(e._id)) {
+                                favList.push(i);
+                            }
+                        }
+                        e2.favouriteLocation = favList;
+                        e2.save();
+                        res.status(200);
+                        res.send();
+                    }
+                })
+            }
+        }
     })
 })
 

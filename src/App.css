@@ -3,7 +3,6 @@
   background-image: url("login.jpg");
 }
 
-
 #login_content {
   -webkit-animation: fadeIn 500ms linear; /* Safari */
   animation: fadeIn 500ms linear;

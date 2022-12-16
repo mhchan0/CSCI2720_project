@@ -153,8 +153,34 @@ class Signup extends Component {
             })
             .then(() => {
                 sessionStorage.setItem("username", this.state.username);
-                sessionStorage.setItem("isAdmin", this.state.password);
-                window.location.replace("http://localhost:3000/dashboard/location");
+                sessionStorage.setItem("isAdmin", false);
+                
+                //download xml & update db
+                axios({
+                    // need change localhost to the publicIP
+                    url: "http://localhost:8080/getXML",
+                    method: "post"
+                })
+                .then((r) => {
+                    let currentTime = new Date();
+                    let date = ("0" + currentTime.getDate()).slice(-2);
+                    let month = ("0" + (currentTime.getMonth() + 1)).slice(-2);
+                    let year = currentTime.getFullYear();
+                    let hour = (currentTime.getHours()<10) ? '0' + currentTime.getHours() : currentTime.getHours();
+                    let minute = (currentTime.getMinutes()<10) ? '0' + currentTime.getMinutes() : currentTime.getMinutes();
+                    let second = (currentTime.getSeconds()<10) ? '0' + currentTime.getSeconds() : currentTime.getSeconds();
+                    let timeString = "" + year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "";
+                    sessionStorage.setItem("lastModified", timeString);
+                    window.location.replace("http://localhost:3000/dashboard/location");
+                })
+                .catch((err) => {
+                    if (err.response.status === 406) {
+                        
+                    }
+                    else {
+                        console.log("Internal server error");
+                    }
+                });
             })
             .catch((err) => {
                 if (err.response.status === 406) {
