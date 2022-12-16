@@ -565,25 +565,21 @@ class EventRow extends Component {
                 </li>
                 <li className="list-group-item row-3">
                     <h6 className="text-break">Date:&nbsp;&nbsp;{"\n"}</h6>
-                    <li className="list-group-item"></li>
                     <span className="text-break">{this.props.date}</span>
                     <input type="text" placeholder="Date" className="form-control mt-3" id={"update_date" + this.props.i} style={{display: "none"}} onBlur={this.validateUpdateInput} required/>
                     <div id={"update_date" + this.props.i + "-invalid"} className="text-danger"></div>
                 </li>
                 <li className="list-group-item"><h6 className="text-break">Description:&nbsp;&nbsp;{"\n"}</h6>
-                    <li className="list-group-item"></li>
                     <span className="text-break">{this.props.desc}</span>
                     <input type="text" placeholder="Description" className="form-control mt-3" id={"update_desc" + this.props.i} style={{display: "none"}} onBlur={this.validateUpdateInput} required/>
                     <div id={"update_desc" + this.props.i + "-invalid"} className="text-danger"></div>
                 </li>
                 <li className="list-group-item"><h6 className="text-break">Price:&nbsp;&nbsp;{"\n"}</h6>
-                    <li className="list-group-item"></li>
                     <span className="text-break">{this.props.price}</span>
                     <input type="text" placeholder="Price" className="form-control mt-3" id={"update_price" + this.props.i} style={{display: "none"}} onBlur={this.validateUpdateInput} required/>
                     <div id={"update_price" + this.props.i + "-invalid"} className="text-danger"></div>
                 </li>
                 <li className="list-group-item"><h6 className="text-break">Presenter:&nbsp;&nbsp;{"\n"}</h6>
-                    <li className="list-group-item"></li>
                     <span className="text-break">{this.props.presenter}</span>
                     <input type="text" placeholder="Presenter" className="form-control mt-3" id={"update_presenter" + this.props.i} style={{display: "none"}} onBlur={this.validateUpdateInput} required/>
                     <div id={"update_presenter" + this.props.i + "-invalid"} className="text-danger"></div>
