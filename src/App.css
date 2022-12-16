@@ -84,6 +84,11 @@
   background-color: #f1f1f1;
 }
 
+/* for star */
+.click-star:hover {
+  cursor: pointer;
+}
+
 /* css for map */
 .map-container {
   height: 400px;

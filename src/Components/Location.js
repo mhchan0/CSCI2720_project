@@ -146,7 +146,7 @@ class Location extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.locationList.map((location, index) => <LocationRow key={index} i={index} name={location.name} programme= {location.programme} />)}
+                        {this.state.locationList.map((location, index) => <LocationRow key={index} i={index} name={location.name} programme={location.programme} locid={location.locid}/>)}
                     </tbody>
                 </table>
             </main>
@@ -186,11 +186,11 @@ class LocationRow extends Component {
         return (
             <tr>
                 <td id={"loc" + this.props.i}>
-                    <Link className="nav-link" to={"/dashboard/location/"}>{this.props.name}</Link>
+                    <Link className="nav-link" to={`/dashboard/location/${this.props.locid}`}>{this.props.name}</Link>
                 </td>
                 <td>{this.props.programme.length}</td>
                 <td>
-                    <i id={"star" + this.props.i} className="bi bi-star-fill text-secondary" onClick={this.clickStar}></i>
+                    <i id={"star" + this.props.i} className="bi bi-star-fill text-secondary click-star" onClick={this.clickStar}></i>
                 </td>
             </tr>
         );

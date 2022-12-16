@@ -53,7 +53,7 @@ class Map extends Component {
             for (let i of r.data) {
                 new mapboxgl.Marker()
                 .setLngLat([i.longitude, i.latitude])
-                .setPopup(new mapboxgl.Popup().setHTML(`<h5>${i.name}</h5><h6>Event Number: ${i.programme.length}</h6>`))
+                .setPopup(new mapboxgl.Popup().setHTML(`<a href="http://localhost:3000/dashboard/location/${i.locid}"><h5>${i.name}</h5></a><h6>Event Number: ${i.programme.length}</h6>`))
                 .addTo(map);
             }
 

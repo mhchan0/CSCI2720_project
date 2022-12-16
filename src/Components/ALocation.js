@@ -45,7 +45,7 @@ function ALocation() {
                 <h2 className="text-primary">{locData.name}</h2>
                 <h3 ><b className="text-primary">{username}</b>&nbsp;<i className="bi bi-person-circle"></i></h3>
             </div>
-            {locData.longitude && locData.latitude && <Map lng={locData.longitude} lat={locData.latitude} zoom={12}/>}
+            {locData.longitude && locData.latitude && <Map lng={locData.longitude} lat={locData.latitude} zoom={15}/>}
         </main>
         
     );
