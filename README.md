@@ -33,7 +33,7 @@ location results
 - [ ] Add location into a list of user’s favourite locations, and see the list in another view
 - [x] See the username in the top left/right of screen, and be able to log out
 * Admin Actions
-- [ ] CRUD stored event details or road names in the local database
+- [x] CRUD stored event details or road names in the local database
     * We will not test other features (e.g., map, comments) if deleting an existing location
 - [x] CRUD user data (username and password only) in the local database
     * We will not test other features (e.g., comments) if deleting an existing user
