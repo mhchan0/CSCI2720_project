@@ -182,7 +182,7 @@ app.post('/location', (req,res) => {
     );
 });
 
-// get event data by objectId
+//get event data by objectId
 app.post('/eventbyid', (req, res) => {
     Programme.find({
         _id: { $in: req.body["id"]}
@@ -197,8 +197,88 @@ app.post('/eventbyid', (req, res) => {
     });
 });
 
+
+//get all events
+app.post('/events', (req, res) => {
+    Programme.find({}, (err, e) => {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.status(200);
+            res.send(e);
+        }
+    });
+});
+
+//create new event
+app.post('/newevent', (req, res) => {
+    Programme.create({
+        title: req.body['title'],
+        venue: req.body['venue'],
+        date: req.body['date'],
+        description: req.body['description'],
+        price: req.body['price'],
+        presenter: req.body['presenter']
+    }, (err, e) => {
+        if (err) {
+            res.status(406);
+            res.send();
+        }
+        else {
+            res.status(201);
+            res.send();
+        }
+    })
+});
+
+//delete one event
+app.delete('/deleteevent', (req, res) => {
+    Programme.deleteOne({
+        title: req.body['title'],
+        venue: req.body['venue'],
+        date: req.body['date'],
+        description: req.body['description'],
+        price: req.body['price'],
+        presenter: req.body['presenter']
+    }, (err, e) => {
+        if (err) {
+            res.status(406);
+            res.send();
+        }
+        else {
+            res.status(201);
+            res.send();
+        }
+    })
+})
+
+//update one event
+app.post('/updateevent', (req, res) => {
+    Programme.findOneAndUpdate({
+        _id: req.body["id"]
+    }, {
+        title: req.body['title'],
+        venue: req.body['venue'],
+        date: req.body['date'],
+        description: req.body['description'],
+        price: req.body['price'],
+        presenter: req.body['presenter']
+    }, null,(err, e) => {
+        if (err) {
+            res.status(406);
+            res.send();
+        }
+        else {
+            res.status(200);
+            res.send();
+        }
+    })
+});
+
+
+//download and put xml to db
 var file_dir_xml = __dirname + '/XMLfiles/';
-//down and put xml to db
 updateEvents = (res) => {
     var url = 'https://www.lcsd.gov.hk/datagovhk/event/events.xml';
     var file_name = 'events.xml';
