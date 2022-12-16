@@ -124,6 +124,7 @@ class Location extends Component {
         if (username === null) {
 			window.location.replace("http://localhost:3000/");
 		}
+        let lastmod = sessionStorage.getItem("lastModified");
 
         return ( //i add something behind, u may delete sth when it is overlapped
 			<main className="col">
@@ -136,8 +137,8 @@ class Location extends Component {
                 
                 <input type="text" id="myInput" value={this.state.search} onChange={(value) => this.setState({search: value.target.value})} onKeyUp={() => this.searchLocation()} placeholder="Search for Locations..." />
                 
-                <p><button id="sort-btn" className="btn btn-info" onClick={() => this.sortTable()}>Sort <i className="bi bi-arrow-up"></i></button></p>
-                
+                <p className="d-inline"><button id="sort-btn" className="btn btn-info" onClick={() => this.sortTable()}>Sort <i className="bi bi-arrow-up"></i></button></p>
+                <h5 className="d-inline float-end">Last Updated: {lastmod}</h5>
                 <table id="myTable" className="my-3">
                     <thead>
                         <tr className="header">
