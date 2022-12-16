@@ -47,14 +47,15 @@ presenter:{type: String, required: true }
 });
 
 const CommentSchema = new Schema({
-user : { type: Schema.Types.ObjectId, ref: "Access" },
-body: { type: String, required: true }
+    user : { type: Schema.Types.ObjectId, ref: "Access" },
+    location : { type: Schema.Types.ObjectId, ref: "Location" },
+    body: { type: String, required: true }
 });
 
 const Access = mongoose.model("Access", LoginAccessSchema);
 const Location = mongoose.model("Location", LocationSchema);
 const Programme = mongoose.model("Programme", ProgrammeSchema);
-const Comment = mongoose.model("Comment", LoginAccessSchema);
+const Comment = mongoose.model("Comment", CommentSchema);
 
 // create a new user
 app.post("/newuser", (req, res) => {
@@ -196,6 +197,56 @@ app.post('/eventbyid', (req, res) => {
         }
     });
 });
+
+// get comments
+app.post('/comments', (req, res) => {
+    Comment.find({
+        location: req.body["locid"]
+    })
+    .populate("location user")
+    .exec((err, e) => {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.send(e);
+        }
+    });
+});
+
+// add comment
+app.post('/addcomment', (req, res) => {
+    Access.findOne({
+        username: req.body["username"]
+    })
+    .exec((err, e) => {
+        if (err) {
+            res.status(406);
+            res.send();
+        }
+        else if (e === null) {
+            res.status(406);
+            res.send();
+        }
+        else {
+            Comment.create({
+                user: e._id,
+                location: req.body["locid"],
+                body: req.body["comment"]
+            }, (err2 => {
+                if (err2) {
+                    res.status(406);
+                    res.send();
+                }
+                else {
+                    res.status(200);
+                    res.send();
+                }
+            }))
+        }
+    });
+});
+
 
 
 //get all events

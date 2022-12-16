@@ -17,14 +17,20 @@ function ALocation() {
     const [locData, setLocData] = useState({});
     const [isFavourite, setFavourite] = useState(false);
     const [eventList, setEventList] = useState([]);
+    const [commentList, setCommentList] = useState([]);
 
     useEffect(() => {
-        const payload = {
-            locid: loc
-        }
 
         if (isNaN(loc)) {
             window.location.replace("http://localhost:3000/dashboard/location");
+        }
+
+        loadData();
+    })
+
+    let loadData = () => {
+        const payload = {
+            locid: loc
         }
 
         axios({
@@ -36,7 +42,7 @@ function ALocation() {
         .then((e) => {
             const eventPayload = {
                 id: e.data.programme
-            }
+            };
 
             setLocData(e.data);
             axios({
@@ -51,19 +57,76 @@ function ALocation() {
             .catch(err2 => {
                 console.log("Internal server error");
             })
+
+            const locidPayload = {
+                locid: e.data._id
+            };
+
+            axios({
+                // need change localhost to the publicIP
+                url: "http://localhost:8080/comments",
+                method: "POST",
+                data: locidPayload
+            })
+            .then(e3 => {
+                setCommentList(e3.data);
+            })
+            .catch(err3 => {
+                console.log("Internal server error");
+            })
         })
         .catch((err) => {
             window.location.replace("http://localhost:3000/dashboard/location");
         });
-    })
+    }
 
     let clickStar = (e) => {
-        let element = document.querySelector("#star");
+
         if (!isFavourite) {
             setFavourite(true);
         }
         else {
             setFavourite(false);
+        }
+    }
+
+    let validateComment = (e) => {
+        if (e.target.value !== "") {
+            e.target.classList.remove("is-invalid");
+            document.querySelector("#" + e.target.id + "-invalid").innerText = "";
+        }
+        else {
+            e.target.classList.add("is-invalid");
+            document.querySelector("#" + e.target.id + "-invalid").innerText = "Please fill out this field";
+        }
+    }
+
+    let SubmitComment = () => {
+        let element = document.querySelector("#new-comment");
+        if (element.value === "") {
+            element.classList.add("is-invalid");
+            document.querySelector("#new-comment-invalid").innerText = "Please fill out this field";
+        }
+        else {
+            const payload = {
+                username: username,
+                locid: locData._id,
+                comment: element.value
+            };
+
+            axios({
+                // need change localhost to the publicIP
+                url: "http://localhost:8080/addcomment",
+                method: "POST",
+                data: payload
+            })
+            .then((r) => {
+                loadData();
+                element.value = "";
+            })
+            .catch((err) => {
+                console.log("Internal server error");
+            });
         }
     }
 
@@ -136,6 +199,24 @@ function ALocation() {
                 <div className="card-header">
                     <h5>Comments</h5>
                 </div>
+                <div className="card-body">
+                    <label htmlFor="new-comment">Comment</label>
+					<textarea id="new-comment" className="form-control" rows="3" placeholder="Comment" style={{resize: "none"}} required onBlur={(e)=>validateComment(e)}></textarea>
+					<div id="new-comment-invalid" className="text-danger"></div>
+                    <button type="button" className="btn btn-primary my-3 w-100" onClick={()=>SubmitComment()}>Post</button>
+                    <hr />
+                    <ul className="list-group list-group-flush my-3">
+                        {
+                            commentList.length === 0 &&
+                            <div className="text-muted">There is no comment</div>
+                        }
+                        {
+                            commentList.length !== 0 &&
+                            commentList.map((comment, index) => <CommentList key={index} username={comment.user.username} body={comment.body} />)
+                        }
+                    </ul>
+
+                </div>
             </div>
 
         </main>
@@ -164,6 +245,24 @@ class EventRow extends Component {
                    {this.props.presenter} 
                 </td>
             </tr>
+        );
+    }
+}
+
+class CommentList extends Component {
+
+    render() {
+        return(
+            <li className="list-group-item d-flex">
+                <div>
+                    <h1><i className="bi bi-person-circle"></i></h1>
+                </div>
+                <div className="mx-2">
+                    <b>{this.props.username}</b>
+                    <br/>
+                    <p className="text-break">{this.props.body}</p>
+                </div>
+            </li>
         );
     }
 }
