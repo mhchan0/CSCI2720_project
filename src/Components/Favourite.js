@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 class Favourite extends Component {
+
+    Loadlocation() {
+        axios({
+            // need change localhost to the publicIP
+            url: "http://localhost:8080/location/fav",
+            method: "GET",
+        })
+        .then((r) => {
+            this.setState({
+                locationList: r.data
+            });
+        })
+    }
 
     render() {
 

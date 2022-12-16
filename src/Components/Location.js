@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Map from "./Map.js"
+import Favourite from "./Favourite.js"
 
 class Location extends Component {
     constructor(props) {
@@ -172,6 +173,7 @@ class LocationRow extends Component {
             });
             element.classList.remove("text-secondary");
             element.classList.add("text-warning");
+            Favourite.Loadlocation();
         }
         else {
             this.setState({
