@@ -26,7 +26,7 @@ with number of events at venue
 - [x] Show all locations in a map, with links to each single location
 - [x] Search for locations which contain keywords in the name which will result in a table of 
 location results
-- [ ] A separate view for one single location, containing:
+- [x] A separate view for one single location, containing:
     * a map showing the location
     * the location details (events or traffic speed)
     * user comments, where users can add new comments seen by all other users
