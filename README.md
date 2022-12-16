@@ -30,7 +30,7 @@ location results
     * a map showing the location
     * the location details (events or traffic speed)
     * user comments, where users can add new comments seen by all other users
-- [ ] Add location into a list of user’s favourite locations, and see the list in another view
+- [x] Add location into a list of user’s favourite locations, and see the list in another view
 - [x] See the username in the top left/right of screen, and be able to log out
 * Admin Actions
 - [x] CRUD stored event details or road names in the local database
