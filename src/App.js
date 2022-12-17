@@ -11,6 +11,7 @@ import Favourite from "./Components/Favourite.js";
 import User from "./Components/User.js";
 import Event from "./Components/Event.js";
 import ALocation from "./Components/ALocation.js";
+import FullNavbar from "./Components/FullNavbar.js";
 
 function App() {
 
@@ -20,11 +21,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard/location" element={<div className="container-fluid row"><Navbar /><Location /></div>} />
-          <Route path="/dashboard/favourite" element={<div className="container-fluid row"><Navbar /><Favourite /></div>} />
-          <Route path="/dashboard/user" element={<div className="container-fluid row"><Navbar /><User/></div>} />
-          <Route path="/dashboard/event" element={<div className="container-fluid row"><Navbar /><Event /></div>} />
-          <Route path="/dashboard/location/:loc" element={<div className="container-fluid row"><Navbar /><ALocation /></div>} />
+          <Route path="/dashboard/location" element={<div><FullNavbar /><div className="container-fluid row"><Navbar /><Location /></div></div>} />
+          <Route path="/dashboard/favourite" element={<div><FullNavbar /><div className="container-fluid row"><Navbar /><Favourite /></div></div>} />
+          <Route path="/dashboard/user" element={<div><FullNavbar /><div className="container-fluid row"><Navbar /><User/></div></div>} />
+          <Route path="/dashboard/event" element={<div><FullNavbar /><div className="container-fluid row"><Navbar /><Event /></div></div>} />
+          <Route path="/dashboard/location/:loc" element={<div><FullNavbar /><div className="container-fluid row"><Navbar /><ALocation /></div></div>} />
         </Routes>
       </div>
     </BrowserRouter>

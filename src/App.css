@@ -52,6 +52,29 @@
   color: white !important;
 }
 
+#navbar-normal {
+  display: block;
+}
+
+#navbar-full {
+  display: none;
+}
+
+#navbar-button {
+  display: none;
+}
+
+@media screen and (max-width:
+700px) {
+  #navbar-normal {
+    display: none;
+  }
+
+  #navbar-button {
+    display: block;
+  }
+}
+
 /*CSS for index.html*/
 #myInput {
   background-position: 10px 12px; /* Position the search icon */

@@ -133,8 +133,13 @@ class Location extends Component {
             });
         })
         .catch((err) => {
+            console.log(err);
             console.log("Internal server error");
         });
+    }
+
+    expandNavbar = () => {
+        document.querySelector("#navbar-full").style.display = "block";
     }
 
     render() {
@@ -148,7 +153,12 @@ class Location extends Component {
         return ( //i add something behind, u may delete sth when it is overlapped
 			<main className="col">
                 <div className="my-3 d-flex justify-content-between">
-                    <h2 className="text-primary">Location</h2>
+                    <h2 className="text-primary d-flex">
+                        <span id="navbar-button">
+                            <button type="button" className="btn btn-primary"><i className="bi bi-caret-right-fill" onClick={()=>this.expandNavbar()}></i></button>&nbsp;
+                        </span>
+                            Location
+                    </h2>
                     <h3 ><b className="text-primary">{username}</b>&nbsp;<i className="bi bi-person-circle"></i></h3>
                 </div>
 

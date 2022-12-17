@@ -169,10 +169,19 @@ function ALocation() {
         }
     }
 
+    let expandNavbar = () => {
+        document.querySelector("#navbar-full").style.display = "block";
+    }
+
     return (
 		<main className="col">
             <div className="my-3 d-flex justify-content-between">
+                <span>
+                        <span id="navbar-button">
+                            <button type="button" className="btn btn-primary"><i className="bi bi-caret-right-fill" onClick={()=>expandNavbar()}></i></button>&nbsp;
+                        </span>
                 {locData.name && <h2 className="text-primary">{locData.name}</h2>}
+                </span>
                 <h3><b className="text-primary">{username}</b>&nbsp;<i className="bi bi-person-circle"></i></h3>
             </div>
 

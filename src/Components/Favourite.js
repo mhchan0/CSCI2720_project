@@ -56,6 +56,10 @@ class Favourite extends Component {
         });
     }
 
+    expandNavbar = () => {
+        document.querySelector("#navbar-full").style.display = "block";
+    }
+
     render() {
 
         let username = sessionStorage.getItem("username");
@@ -66,7 +70,11 @@ class Favourite extends Component {
         return (
 			<main className="col">
                 <div className="my-3 d-flex justify-content-between">
-                    <h2 className="text-primary">Favourite</h2>
+                    <h2 className="text-primary">
+                        <span id="navbar-button">
+                            <button type="button" className="btn btn-primary"><i className="bi bi-caret-right-fill" onClick={()=>this.expandNavbar()}></i></button>&nbsp;
+                        </span>Favourite
+                    </h2>
                     <h3 ><b className="text-primary">{username}</b>&nbsp;<i className="bi bi-person-circle"></i></h3>
                 </div>
 
