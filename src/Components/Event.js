@@ -31,7 +31,7 @@ class Event extends Component {
             this.setState({
                 locationList: e.data[1]
             });
-            console.log(e.data);
+            //console.log(e.data);
         })
         .catch((err) => console.log("Internal server error"));
     }
