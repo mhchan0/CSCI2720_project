@@ -287,8 +287,55 @@ app.post('/events', (req, res) => {
             res.send(err);
         }
         else {
-            res.status(200);
-            res.send(e);
+            //console.log(e);
+            let events = e;
+            let a = 0;
+            let b = 0;
+            let list = [];
+            let list2 = [];
+            let list3 = [];
+            e.map((value, index) => {
+                list.push(value.venue);
+            })
+            function asyncLoop( i = 0, callback ) {
+                if( i < list.length ) {
+                    let isnum = /^\d+$/.test(list[i]);
+                    if (!isnum){
+                        let str = "No such location";
+                        list2.push(str);
+                        asyncLoop( i+1, callback );
+                    }else{
+                        Location.findOne({ locid: list[i] }, "locid name", (err, ee)=> {
+                            if (err) {console.log(err);}
+                            else {
+                                //console.log(ee);
+                                if (ee == null){
+                                    let str = "No such location";
+                                    list2.push(str);
+                                }else{
+                                    list2.push(ee.name);
+                                    //console.log(typeof(str));
+                                }
+                                
+                                //events[i]["locname"] = ee.name;
+                                asyncLoop( i+1, callback );
+                            }
+                        })
+                    }
+                    
+                } else {
+                    callback();
+                }
+            }
+            asyncLoop( 0, function() {
+                
+                list3.push(events);
+                list3.push(list2);
+                res.status(200);
+                res.send(list3);
+
+            });
+            
         }
     });
 });
