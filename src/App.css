@@ -1,5 +1,6 @@
 #login_page {
   background-color: rgb(244, 244, 244);
+  background-image: url("login.jpg");
 }
 
 #login_content {

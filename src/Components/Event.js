@@ -9,7 +9,8 @@ class Event extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            eventsList: []
+            eventsList: [],
+            locationList: []
         }
     }
 
@@ -25,8 +26,12 @@ class Event extends Component {
         })
         .then((e) => {
             this.setState({
-                eventsList: e.data
+                eventsList: e.data[0]
             });
+            this.setState({
+                locationList: e.data[1]
+            });
+            //console.log(e.data);
         })
         .catch((err) => console.log("Internal server error"));
     }
@@ -59,24 +64,24 @@ class Event extends Component {
 
     validateCreateInput = (e) => {
         if (e.target.checkValidity()) {
-            if (String(e.target.value).length < 4 || String(e.target.value).length > 20) {
+            if (String(e.target.value).length < 1 || String(e.target.value).length > 100) {
                 if (e.target.id === "create_title") {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Title must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Title must be between 1 and 100 characters";
                 }
                 else if (e.target.id === "create_venue") {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Venue must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Venue must be between 1 and 100 characters";
                 }
                 else if (e.target.id === "create_date") {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Date must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Date must be between 1 and 100 characters";
                 }
                 else if (e.target.id === "create_desc") {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Description must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Description must be between 1 and 100 characters";
                 }
                 else if (e.target.id === "create_price") {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Price must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Price must be between 1 and 100 characters";
                 }
                 else if (e.target.id === "create_presenter") {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Presenter must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Presenter must be between 1 and 100 characters";
                 }
             }
             else {
@@ -125,9 +130,9 @@ class Event extends Component {
             document.querySelector("#create_title-invalid").innerText = "Please enter title";
             inputCorrect = false;
         }
-        else if (String(title).length < 4 || String(title).length > 20) {
+        else if (String(title).length < 1 || String(title).length > 100) {
             elementTitle.classList.add("is-invalid");
-            document.querySelector("#create_title-invalid").innerText = "Title must be between 4 and 20 characters";
+            document.querySelector("#create_title-invalid").innerText = "Title must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -139,9 +144,9 @@ class Event extends Component {
             document.querySelector("#create_venue-invalid").innerText = "Please enter venue";
             inputCorrect = false;
         }
-        else if (String(venue).length < 4 || String(venue).length > 20) {
+        else if (String(venue).length < 1 || String(venue).length > 100) {
             elementVenue.classList.add("is-invalid");
-            document.querySelector("#create_venue-invalid").innerText = "Venue must be between 4 and 20 characters";
+            document.querySelector("#create_venue-invalid").innerText = "Venue must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -153,9 +158,9 @@ class Event extends Component {
             document.querySelector("#create_date-invalid").innerText = "Please enter date";
             inputCorrect = false;
         }
-        else if (String(date).length < 4 || String(date).length > 20) {
+        else if (String(date).length < 1 || String(date).length > 100) {
             elementDate.classList.add("is-invalid");
-            document.querySelector("#create_date-invalid").innerText = "Date must be between 4 and 20 characters";
+            document.querySelector("#create_date-invalid").innerText = "Date must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -167,9 +172,9 @@ class Event extends Component {
             document.querySelector("#create_desc-invalid").innerText = "Please enter description";
             inputCorrect = false;
         }
-        else if (String(desc).length < 4 || String(desc).length > 20) {
+        else if (String(desc).length < 1 || String(desc).length > 100) {
             elementDesc.classList.add("is-invalid");
-            document.querySelector("#create_desc-invalid").innerText = "Description must be between 4 and 20 characters";
+            document.querySelector("#create_desc-invalid").innerText = "Description must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -181,9 +186,9 @@ class Event extends Component {
             document.querySelector("#create_price-invalid").innerText = "Please enter price";
             inputCorrect = false;
         }
-        else if (String(price).length < 4 || String(price).length > 20) {
+        else if (String(price).length < 1 || String(price).length > 100) {
             elementPrice.classList.add("is-invalid");
-            document.querySelector("#create_price-invalid").innerText = "Price must be between 4 and 20 characters";
+            document.querySelector("#create_price-invalid").innerText = "Price must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -195,9 +200,9 @@ class Event extends Component {
             document.querySelector("#create_presenter-invalid").innerText = "Please enter presenter";
             inputCorrect = false;
         }
-        else if (String(presenter).length < 4 || String(presenter).length > 20) {
+        else if (String(presenter).length < 1 || String(presenter).length > 100) {
             elementPresenter.classList.add("is-invalid");
-            document.querySelector("#create_presenter-invalid").innerText = "Presenter must be between 4 and 20 characters";
+            document.querySelector("#create_presenter-invalid").innerText = "Presenter must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -248,7 +253,6 @@ class Event extends Component {
                 <div>
                     <h1 className="my-3">Events&nbsp;Manage</h1>
                     <button type="button" className="btn btn-primary my-3" onClick={this.showCreateInput}>Create New Event</button>
-
                     <div id="create-event" className="border border-info w-50 rounded" style={{display: "none"}}>
                         <input type="text" placeholder="Title" className="form-control mx-3 mt-3 w-75" id="create_title" onBlur={this.validateCreateInput} required/>
                         <div id="create_title-invalid" className="text-danger mx-3"></div>
@@ -277,15 +281,14 @@ class Event extends Component {
                     <h3 className="my-3">Events&nbsp;Table</h3>
                     <table className="table table-hover">
                         <thead>
-                            {/* <tr className="table-secondary">
-                                <th>Title</th>
-                                <th>Hashed&nbsp;Password</th>
+                            <tr className="table-secondary">
+                                <th>Event Details</th>
                                 <th>Operations</th>
-                            </tr> */}
+                            </tr>
                         </thead>
                         <tbody>
                             {this.state.eventsList.map((event, index) => <EventRow key={index} i={index} title={event.title} venue={event.venue} date={event.date}
-                            desc={event.description} price={event.price} presenter={event.presenter} id={event._id} loadData={this.loadData}/>)}
+                            desc={event.description} price={event.price} presenter={event.presenter} id={event._id} locname={this.state.locationList[index]} loadData={this.loadData}/>)}
                         </tbody>
                     </table>
                 </div>
@@ -364,24 +367,24 @@ class EventRow extends Component {
 
     validateUpdateInput = (e) => {
         if (e.target.checkValidity()) {
-            if (String(e.target.value).length < 4 || String(e.target.value).length > 20) {
+            if (String(e.target.value).length < 1 || String(e.target.value).length > 100) {
                 if (e.target.id === "update_title" + this.props.i) {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Title must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Title must be between 1 and 100 characters";
                 }
                 else if (e.target.id === "update_venue" + this.props.i) {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Venue must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Venue must be between 1 and 100 characters";
                 }
                 else if (e.target.id === "update_date" + this.props.i) {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Date must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Date must be between 1 and 100 characters";
                 }
                 else if (e.target.id === "update_desc" + this.props.i) {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Description must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Description must be between 1 and 100 characters";
                 }
                 else if (e.target.id === "update_price" + this.props.i) {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Price must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Price must be between 1 and 100 characters";
                 }
                 else if (e.target.id === "update_presenter" + this.props.i) {
-                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Presenter must be between 4 and 20 characters";
+                    document.querySelector("#" + e.target.id + "-invalid").innerText = "Presenter must be between 1 and 100 characters";
                 }
             }
             else {
@@ -434,9 +437,9 @@ class EventRow extends Component {
             document.querySelector("#update_title" + this.props.i + "-invalid").innerText = "Please enter title";
             inputCorrect = false;
         }
-        else if (String(title).length < 4 || String(title).length > 20) {
+        else if (String(title).length < 1 || String(title).length > 100) {
             elementTitle.classList.add("is-invalid");
-            document.querySelector("#update_title" + this.props.i + "-invalid").innerText = "Title must be between 4 and 20 characters";
+            document.querySelector("#update_title" + this.props.i + "-invalid").innerText = "Title must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -448,9 +451,9 @@ class EventRow extends Component {
             document.querySelector("#update_venue" + this.props.i + "-invalid").innerText = "Please enter venue";
             inputCorrect = false;
         }
-        else if (String(venue).length < 4 || String(venue).length > 20) {
+        else if (String(venue).length < 1 || String(venue).length > 100) {
             elementVenue.classList.add("is-invalid");
-            document.querySelector("#update_venue" + this.props.i + "-invalid").innerText = "Venue must be between 4 and 20 characters";
+            document.querySelector("#update_venue" + this.props.i + "-invalid").innerText = "Venue must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -462,9 +465,9 @@ class EventRow extends Component {
             document.querySelector("#update_date" + this.props.i + "-invalid").innerText = "Please enter date";
             inputCorrect = false;
         }
-        else if (String(date).length < 4 || String(date).length > 20) {
+        else if (String(date).length < 1 || String(date).length > 100) {
             elementDate.classList.add("is-invalid");
-            document.querySelector("#update_date" + this.props.i + "-invalid").innerText = "Date must be between 4 and 20 characters";
+            document.querySelector("#update_date" + this.props.i + "-invalid").innerText = "Date must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -476,9 +479,9 @@ class EventRow extends Component {
             document.querySelector("#update_desc" + this.props.i + "-invalid").innerText = "Please enter description";
             inputCorrect = false;
         }
-        else if (String(desc).length < 4 || String(desc).length > 20) {
+        else if (String(desc).length < 1 || String(desc).length > 100) {
             elementDesc.classList.add("is-invalid");
-            document.querySelector("#update_desc" + this.props.i + "-invalid").innerText = "Description must be between 4 and 20 characters";
+            document.querySelector("#update_desc" + this.props.i + "-invalid").innerText = "Description must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -490,9 +493,9 @@ class EventRow extends Component {
             document.querySelector("#update_price" + this.props.i + "-invalid").innerText = "Please enter price";
             inputCorrect = false;
         }
-        else if (String(price).length < 4 || String(price).length > 20) {
+        else if (String(price).length < 1 || String(price).length > 100) {
             elementPrice.classList.add("is-invalid");
-            document.querySelector("#update_price" + this.props.i + "-invalid").innerText = "Price must be between 4 and 20 characters";
+            document.querySelector("#update_price" + this.props.i + "-invalid").innerText = "Price must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -504,9 +507,9 @@ class EventRow extends Component {
             document.querySelector("#update_presenter" + this.props.i + "-invalid").innerText = "Please enter presenter";
             inputCorrect = false;
         }
-        else if (String(presenter).length < 4 || String(presenter).length > 20) {
+        else if (String(presenter).length < 1 || String(presenter).length > 100) {
             elementPresenter.classList.add("is-invalid");
-            document.querySelector("#update_presenter" + this.props.i + "-invalid").innerText = "Presenter must be between 4 and 20 characters";
+            document.querySelector("#update_presenter" + this.props.i + "-invalid").innerText = "Presenter must be between 1 and 100 characters";
             inputCorrect = false;
         }
 
@@ -558,10 +561,14 @@ class EventRow extends Component {
                     
                 </li>
                 <li className="list-group-item row-3">
-                    <h6 className="text-break">Location:&nbsp;&nbsp;{"\n"}</h6>
+                    <h6 className="text-break">Location ID:&nbsp;&nbsp;{"\n"}</h6>
                     <span className="text-break">{this.props.venue}</span>
                     <input type="text" placeholder="Venue" className="form-control mt-3" id={"update_venue" + this.props.i} style={{display: "none"}} onBlur={this.validateUpdateInput} required/>
                     <div id={"update_venue" + this.props.i + "-invalid"} className="text-danger"></div>
+                </li>
+                <li className="list-group-item row-3">
+                    <h6 className="text-break">Location Name:&nbsp;&nbsp;{"\n"}</h6>
+                    <span className="text-break">{this.props.locname}</span>
                 </li>
                 <li className="list-group-item row-3">
                     <h6 className="text-break">Date:&nbsp;&nbsp;{"\n"}</h6>

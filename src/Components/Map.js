@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3NuZXdsZWFybmVycyIsImEiOiJjbGJvenZpdXkwM3FmM3ByN2NjeHd4aDl2In0.3zPvnWJZGQNDzllbqR6gjg';
 
 class Map extends Component {
@@ -59,7 +60,7 @@ class Map extends Component {
 
         })
         .catch((err) => {
-            console.log("Internal server error");
+            //console.log("Internal server error");
         });
     }
 
